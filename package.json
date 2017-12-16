@@ -1,0 +1,26 @@
+{
+    "name": "aoc-2017",
+    "version": "1.0.0",
+    "description": "Advent of Code 2017",
+    "main": "index.js",
+    "repository": "https://github.com/apazzolini/aoc-2017",
+    "author": "Andre Azzolini (apazzolini)",
+    "license": "MIT",
+    "scripts": {
+        "test:watch": "jest --watch"
+    },
+    "devDependencies": {
+        "babel-cli": "6.26.0",
+        "babel-eslint": "8.0.3",
+        "babel-jest": "21.2.0",
+        "babel-plugin-transform-class-properties": "6.24.1",
+        "babel-plugin-transform-object-rest-spread": "6.26.0",
+        "babel-preset-env": "1.6.1",
+        "eslint": "4.13.1",
+        "eslint-config-airbnb-base": "12.1.0",
+        "jest": "21.2.1"
+    },
+    "dependencies": {
+        "get-stdin": "5.0.1"
+    }
+}
