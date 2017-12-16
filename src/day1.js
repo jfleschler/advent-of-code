@@ -7,11 +7,5 @@ export const solve = (input, rotate) => {
     }, 0)
 }
 
-if (require.main === module) {
-    const getStdin = require('get-stdin')
-    getStdin()
-        .then(input => {
-            const answer = solve(input.trim(), input.trim().length / 2)
-            console.log(`The answer is ${answer}`)
-        })
-}
+export const solvePart1 = input => solve(input, 1)
+export const solvePart2 = input => solve(input, input.length / 2)
