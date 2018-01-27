@@ -21,6 +21,8 @@
         "jest": "21.2.1"
     },
     "dependencies": {
-        "get-stdin": "5.0.1"
+        "dotenv": "4.0.0",
+        "get-stdin": "5.0.1",
+        "node-fetch": "1.7.3"
     }
 }
