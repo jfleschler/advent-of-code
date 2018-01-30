@@ -20,7 +20,12 @@
         'no-unused-expressions': 0,
         'no-unused-vars': [2, { "args": "none" }],
     },
-    'globals': {
-        'console': true,
+    'plugins': [
+        'jest',
+    ],
+    'env': {
+        'node': true,
+        'jest/globals': true,
+        'es6': true,
     },
 }

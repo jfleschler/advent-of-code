@@ -7,23 +7,31 @@
     "author": "Andre Azzolini (apazzolini)",
     "license": "MIT",
     "scripts": {
+        "check": "yarn run lint && yarn run test",
+        "lint": "eslint -c .eslintrc src",
+        "test": "jest",
         "test:watch": "jest --watch"
     },
     "devDependencies": {
         "babel-cli": "6.26.0",
+        "babel-core": "6.26.0",
         "babel-eslint": "8.2.1",
         "babel-jest": "22.1.0",
         "babel-plugin-transform-class-properties": "6.24.1",
-        "babel-plugin-transform-do-expressions": "6.22.0",
         "babel-plugin-transform-object-rest-spread": "6.26.0",
         "babel-preset-env": "1.6.1",
         "eslint": "4.16.0",
-        "eslint-config-airbnb-base": "12.1.0",
+        "eslint-plugin-jest": "21.7.0",
         "jest": "22.1.4"
     },
     "dependencies": {
         "dotenv": "5.0.0",
-        "get-stdin": "5.0.1",
         "node-fetch": "1.7.3"
+    },
+    "jest": {
+        "testPathIgnorePatterns": [
+            "<rootDir>/templates",
+            "<rootDir>/node_modules/"
+        ]
     }
 }

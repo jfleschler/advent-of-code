@@ -47,7 +47,7 @@ export const solvePart2 = target => {
         '0,0': 1
     }
 
-    while (true) {
+    while (true) { // eslint-disable-line
         const sum = getNeighborSum(spiral, x, y)
         if (sum > target) return sum
 

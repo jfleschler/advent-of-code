@@ -2,7 +2,7 @@ import { flatMap, difference, keyBy, isEmpty, find } from 'lodash'
 
 const parsePrograms = input => {
     const programStrs = input.split('\n')
-    const re = /([a-z]+)\ \((\d+)\)(\ ->\ ([a-z,\ ]*))?/
+    const re = /([a-z]+) \((\d+)\)( -> ([a-z, ]*))?/
     return programStrs.map(str => {
         const [, name, weight, , subProgramStrs] = re.exec(str)
         const subPrograms = subProgramStrs ? subProgramStrs.split(', ') : []
