@@ -9,7 +9,8 @@ const run = async day => {
     const filePath = path.join(process.cwd(), 'input', `day${day}`)
 
     if (!fs.existsSync(filePath)) {
-        const res = await fetch(`http://adventofcode.com/2017/day/${day}/input`, {
+        const d = day.startsWith('0') ? day.substring(1) : day
+        const res = await fetch(`http://adventofcode.com/2017/day/${d}/input`, {
             headers: {
                 Cookie: `session=${process.env.SESSION}`
             },
