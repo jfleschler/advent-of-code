@@ -20,7 +20,7 @@ const run = async day => {
     }
 
     const input = fs.readFileSync(filePath, 'utf-8').trim()
-    const answer = dayModule[`solvePart${process.argv[3]}`](input, ...process.argv.slice(3))
+    const answer = dayModule[`solvePart${process.argv[3]}`](input)
     return answer
 }
 
