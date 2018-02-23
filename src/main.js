@@ -26,3 +26,4 @@ const run = async day => {
 
 run(process.argv[2])
     .then(answer => console.log(`The answer is ${answer}`))
+    .catch(e => console.error(e))
