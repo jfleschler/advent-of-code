@@ -2,7 +2,7 @@ import { solvePart1, solvePart2 } from './dayXXX.js'
 
 const example = ``
 
-describe('day XXX', () => {
+describe('YYY day XXX', () => {
     describe('part 1', () => {
         test('solves an example', () => {
             const answer = solvePart1(example)

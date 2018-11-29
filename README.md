@@ -1,21 +1,23 @@
-# aoc-2017
+# advent-of-code
 
-These are my solutions to the [Advent of Code 2017](http://adventofcode.com/2017) programming puzzles.
+These are my solutions to the [Advent of Code](http://adventofcode.com) programming puzzles.
 
 ## Setup
 
 - `brew install watchman`
 - `yarn`
+- Create a `.env` file in the root of this project directory with `SESSION=<your session cookie from AoC>`.
 
-## Running tests
+## Workflow
 
-`yarn test:watch <day>`. For example, `yarn test:watch day1`
+First, generate a skeleton for the day you're solving:
 
-## Executing against the real input
+`yarn run generate <yyyy> <dd>`
 
-Create a `.env` file in the root of this project directory with `SESSION=<your session cookie from AoC>`. This will
-enable the app to fetch the input for a given day and store it if it doesn't exist.
+Next, work on your code and tests. Run tests in watch mode with:
 
-Run `babel-node src/main.js <day> <part>` to execute a problem.
+`yarn run test:watch <yyyy>.day<dd>`
 
-For example, to run the second part of the day one problem, `babel-node src/main.js 1 2`
+Once you're ready to solve your input, run:
+
+`yarn run solve <yyyy> <dd> <part (1 or 2)>`
