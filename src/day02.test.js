@@ -1,4 +1,4 @@
-import { parseInput, solvePart1, solvePart2 } from './day2.js'
+import { parseInput, solvePart1, solvePart2 } from './day02.js'
 
 describe('day 2', () => {
     test('parses input into array', () => {

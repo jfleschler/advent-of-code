@@ -1,7 +1,5 @@
 import { solvePart1, solvePart2 } from './day11.js'
 
-const example = ``
-
 describe('day 11', () => {
     describe('part 1', () => {
         test('solves examples', () => {
@@ -14,8 +12,8 @@ describe('day 11', () => {
 
     describe('part 2', () => {
         test('solves an example', () => {
-            const answer = solvePart2(example)
-            expect(answer).toEqual()
+            const answer = solvePart2('se,sw,se,sw,sw')
+            expect(answer).toEqual(3)
         })
     })
 })

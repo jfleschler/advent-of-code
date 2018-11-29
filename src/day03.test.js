@@ -1,4 +1,4 @@
-import { findCornerBase, solvePart1, solvePart2 } from './day3.js'
+import { findCornerBase, solvePart1, solvePart2 } from './day03.js'
 
 describe('day 3', () => {
     describe('part 1', () => {

@@ -1,4 +1,4 @@
-import { solvePart1, solvePart2 } from './day8.js'
+import { solvePart1, solvePart2 } from './day08.js'
 
 const example = `b inc 5 if a > 1
 a inc 1 if b < 5

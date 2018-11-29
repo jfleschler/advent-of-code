@@ -1,4 +1,4 @@
-import { solvePart1, solvePart2 } from './day7.js'
+import { solvePart1, solvePart2 } from './day07.js'
 
 const exampleInput = `pbga (66)
 xhth (57)

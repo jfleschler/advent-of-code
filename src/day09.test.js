@@ -1,4 +1,4 @@
-import { solvePart1, solvePart2 } from './day9.js'
+import { solvePart1, solvePart2 } from './day09.js'
 
 describe('day 9', () => {
     describe('part 1', () => {

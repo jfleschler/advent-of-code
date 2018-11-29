@@ -1,4 +1,4 @@
-import { isValid, solvePart1, permute, isAnagram, hasNoAnagrams } from './day4.js'
+import { isValid, solvePart1, permute, isAnagram, hasNoAnagrams } from './day04.js'
 
 describe('day 4', () => {
     describe('part 1', () => {

@@ -1,4 +1,4 @@
-import { solvePart1, solvePart2 } from './day1.js'
+import { solvePart1, solvePart2 } from './day01.js'
 
 describe('day 1', () => {
     describe('part 1', () => {
@@ -18,7 +18,7 @@ describe('day 1', () => {
             expect(solvePart1('91212129')).toBe(9)
         })
     })
-    
+
     describe('part 2', () => {
         test('solves example 1', () => {
             expect(solvePart2('1212')).toBe(6)
