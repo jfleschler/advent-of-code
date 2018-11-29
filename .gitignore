@@ -1,5 +1,6 @@
 .env
 .tern-port
+.vimlocal
 
 node_modules/
 yarn-error.log
