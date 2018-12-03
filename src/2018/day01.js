@@ -1,21 +1,23 @@
-const sum = arr => arr.reduce((acc, num) => acc + num, 0)
-
 export const solvePart1 = input => {
-    return sum(input.split('\n').map(Number))
-}
+  input = input.split("\n");
+  return input.map(Number).reduce((acc, val) => acc + val, 0);
+};
 
 export const solvePart2 = input => {
-    const numbers = input.split('\n').map(Number)
-    const seenMap = new Map()
-    let i = 0
-    let s = 0
+  input = input.split("\n").map(Number);
 
-    while (true) { // eslint-disable-line
-        s += numbers[i]
+  const results = [0];
+  let acc = 0;
 
-        if (seenMap.has(s)) return s
-
-        seenMap.set(s, true)
-        i = (i + 1) % numbers.length
+  for (let i = 0; i < input.length; i++) {
+    acc += input[i];
+    if (results.indexOf(acc) !== -1) {
+      return acc;
     }
-}
+
+    results.push(acc);
+    if (i == input.length - 1) {
+      i = -1;
+    }
+  }
+};
