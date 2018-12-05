@@ -10,7 +10,7 @@ const collapsePolymer = input => {
       (cur.toUpperCase() === next || next.toUpperCase() === cur)
     ) {
       stack.splice(i, 2);
-      i = -1;
+      i = Math.max(-1, i - 2);
     }
   }
 
