@@ -23,7 +23,7 @@ export const solvePart1 = input => {
 };
 
 export const solvePart2 = input => {
-  let minLength = 500000;
+  let minLength = input.length;
   for (let i = 10; i < 36; i++) {
     let alpha = i.toString(36);
     let regex = new RegExp(alpha, "gi");
