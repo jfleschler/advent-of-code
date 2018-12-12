@@ -1,9 +1,9 @@
-import { solvePart1, solvePart2 } from "./day09.js";
+import { solvePart1 } from "./day09.js";
 
 describe("2018 day 09", () => {
   describe("part 1", () => {
     test("solves an example", () => {
-      const answer = solvePart1("9 players; last marble is worth 32 points");
+      const answer = solvePart1("9 players; last marble is worth 25 points");
       expect(answer).toEqual(32);
     });
     test("solves an example", () => {
