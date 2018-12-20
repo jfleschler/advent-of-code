@@ -17,28 +17,8 @@ const directions = [
   { x: 0, y: -1 }
 ];
 
-const findAllDistances = walls => {
-  const width = walls[0].length;
-  const height = walls.length;
-
-  const distances = Array(width)
-    .fill()
-    .map(() => Array(height));
-
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      if (walls[x][y] === ".") {
-        // find distance to all points
-        distances[x][y] = buildDistanceMap({ x, y }, walls, []);
-        printRound(distances[x][y], [], `${x},${y}`);
-      }
-    }
-  }
-  return distances;
-};
-
 const buildMap = input => {
-  input = input.split("\n");
+  input = input.trim().split("\n");
 
   const width = input[0].length;
   const height = input.length;
@@ -85,6 +65,8 @@ export const chooseTarget = (unitPos, targets, walls, units) => {
     const testPos = toVisit.shift();
     visited.push(testPos);
 
+    remove(toVisit, pos => visited.includes(pos));
+
     const matches = targets.filter(p => posEquals(testPos, p));
     if (matches.length) {
       if (!foundTargets.some(p => posEquals(testPos, p))) {
@@ -92,13 +74,14 @@ export const chooseTarget = (unitPos, targets, walls, units) => {
       }
     }
 
-    const newMoves = getPossibleMoves(
-      testPos,
-      testPos.dist,
-      walls,
-      units
-    ).filter(pos => !visited.some(p => posEquals(pos, p)));
+    // if we've discovered all our possible next moves, break out early
+    if (foundTargets.length === targets.length) {
+      break;
+    }
 
+    const newMoves = getPossibleMoves(testPos, testPos.dist, walls, units)
+      .filter(pos => !visited.some(p => posEquals(pos, p)))
+      .filter(pos => !toVisit.some(p => posEquals(pos, p)));
     toVisit.push(...newMoves);
   }
 
@@ -110,11 +93,12 @@ export const chooseTarget = (unitPos, targets, walls, units) => {
   // choose the closest found target
   foundTargets = orderUnits(foundTargets, "");
   chosen = head(sortBy(foundTargets, "dist"));
-
   return chosen;
 };
 
-export const buildDistanceMap = (chosenPos, walls, units) => {
+export const buildDistanceMap = (chosenPos, unit, walls, units) => {
+  const unitNextMoves = getPossibleMoves(unit.pos, 0, walls, units);
+
   const possibleLocations = getPossibleMoves(chosenPos, 0, walls, units);
   possibleLocations.push({ ...chosenPos, dist: 0 });
   const toVisit = [...possibleLocations];
@@ -124,18 +108,30 @@ export const buildDistanceMap = (chosenPos, walls, units) => {
     .fill()
     .map(() => Array(walls.length).fill(Infinity));
 
+  const foundTargets = [];
   while (toVisit.length) {
     const testPos = toVisit.shift();
     visited.push(testPos);
 
-    distMap[testPos.x][testPos.y] = testPos.dist;
+    const matches = unitNextMoves.filter(p => posEquals(testPos, p));
+    if (matches.length) {
+      if (!foundTargets.some(p => posEquals(testPos, p))) {
+        foundTargets.push(testPos);
+      }
+    }
 
-    const newMoves = getPossibleMoves(
-      testPos,
-      testPos.dist,
-      walls,
-      units
-    ).filter(pos => !visited.some(p => posEquals(pos, p)));
+    if (testPos.dist < distMap[testPos.x][testPos.y]) {
+      distMap[testPos.x][testPos.y] = testPos.dist;
+    }
+
+    // if we've discovered all our possible next moves, break out early
+    if (foundTargets.length === unitNextMoves.length) {
+      return distMap;
+    }
+
+    const newMoves = getPossibleMoves(testPos, testPos.dist, walls, units)
+      .filter(pos => !visited.some(p => posEquals(pos, p)))
+      .filter(pos => !toVisit.some(p => posEquals(pos, p)));
     toVisit.push(...newMoves);
   }
 
@@ -205,16 +201,9 @@ const moveUnit = (unit, units, targets, walls) => {
   }
 
   // build a distance map
-  const distMap = buildDistanceMap(chosen, walls, units);
+  const distMap = buildDistanceMap(chosen, unit, walls, units);
   let possibleMoves = getPossibleMoves(unit.pos, 0, walls, units).map(loc => {
     const dist = distMap[loc.x][loc.y];
-    const dist2 = distanceMap[loc.x][loc.y][chosen.x][chosen.y];
-    // console.log(
-    //   { x: loc.x, y: loc.y },
-    //   { x: chosen.x, y: chosen.y },
-    //   dist,
-    //   dist2
-    // );
     return {
       ...loc,
       dist
@@ -224,6 +213,21 @@ const moveUnit = (unit, units, targets, walls) => {
   // pick our next move
   possibleMoves = orderUnits(possibleMoves, "");
   possibleMoves = sortBy(possibleMoves, "dist");
+
+  const cleanedMoves = possibleMoves.map(m => {
+    let out;
+    if (m.x < unit.pos.x && m.y === unit.pos.y) {
+      out = "L";
+    } else if (m.x > unit.pos.x && m.y === unit.pos.y) {
+      out = "R";
+    } else if (m.x === unit.pos.x && m.y < unit.pos.y) {
+      out = "U";
+    } else if (m.x === unit.pos.x && m.y > unit.pos.y) {
+      out = "D";
+    }
+    return out + ` ${m.x},${m.y}:${m.dist}`;
+  });
+  console.log(`${unit.type}:${unit.id}`, cleanedMoves);
   const nextMove = head(possibleMoves);
 
   if (nextMove) {
@@ -232,22 +236,31 @@ const moveUnit = (unit, units, targets, walls) => {
   }
 };
 
-const attack = (unit, targets) => {
+const attack = (unit, targets, elfPower) => {
   const attackTarget = getAttackableTarget(unit, targets);
 
   if (attackTarget) {
-    attackTarget.hp -= 3;
-    return attackTarget;
+    console.log(
+      `${unit.type}:${unit.id}(${unit.hp}) attacked ${attackTarget.type}:${
+        attackTarget.id
+      }(${attackTarget.hp})`
+    );
+
+    if (unit.type === "E") {
+      attackTarget.hp -= elfPower;
+    } else {
+      attackTarget.hp -= 3;
+    }
+
+    if (attackTarget.hp <= 0) {
+      console.log(`${attackTarget.type}:${attackTarget.id} has died.`);
+    }
+    return true;
   }
   return false;
 };
 
-let distanceMap;
-
-export const solvePart1 = input => {
-  let { walls, units } = buildMap(input);
-  // distanceMap = findAllDistances(walls);
-
+const simulateBattle = (walls, units, elfPower) => {
   let hasTargets = true;
   let i = 0;
   // printRound(walls, units, i);
@@ -255,6 +268,9 @@ export const solvePart1 = input => {
   while (hasTargets) {
     units = orderUnits(units);
     units.forEach(unit => {
+      if (unit.hp <= 0) {
+        return;
+      }
       const targets = filter(units, u => u.type !== unit.type && u.hp > 0);
 
       // if there are no targets, we win!
@@ -264,25 +280,61 @@ export const solvePart1 = input => {
 
       // attack if I can
       // otherwise, move then try to attack
-      if (!attack(unit, targets)) {
+      if (!attack(unit, targets, elfPower)) {
         moveUnit(unit, units, targets, walls);
-        attack(unit, targets);
+        attack(unit, targets, elfPower);
       }
     });
 
     remove(units, u => u.hp <= 0);
     i++;
-    // printRound(walls, units, ++i);
+    // printRound(walls, units, i);
   }
 
-  return sumBy(units, "hp") * (i - 1);
+  // printRound(walls, units, i);
+  return i;
+};
+
+export const solvePart1 = input => {
+  let { walls, units } = buildMap(input);
+
+  const rounds = simulateBattle(walls, units, 3);
+
+  console.log(sumBy(units, "hp"), rounds);
+  return sumBy(units, "hp") * (rounds - 1);
+};
+
+export const solvePart2 = input => {
+  let { walls, units } = buildMap(input);
+
+  const numElves = units.filter(u => u.type === "E").length;
+  let remainingElves = 0;
+  let rounds = 0;
+  let attackPow = 13;
+
+  let currentUnits;
+  do {
+    ++attackPow;
+    console.log(`Attack Power: ${attackPow}`);
+    currentUnits = JSON.parse(JSON.stringify(units));
+
+    rounds = simulateBattle(walls, currentUnits, attackPow);
+    remove(currentUnits, u => u.hp <= 0);
+
+    remainingElves = currentUnits.filter(u => u.type === "E" && u.hp > 0)
+      .length;
+  } while (numElves !== remainingElves);
+  printRound(walls, currentUnits, rounds);
+
+  console.log(sumBy(currentUnits, "hp"), rounds);
+  return sumBy(currentUnits, "hp") * (rounds - 1);
 };
 
 const printRound = (walls, units, round) => {
   const width = walls[0].length;
   const height = walls.length;
 
-  let out = `Round: ${round}\n`;
+  let out = `\n\nRound: ${round}\n`;
   for (let y = 0; y < height; y++) {
     let health = "\t";
     for (let x = 0; x < width; x++) {
@@ -303,5 +355,3 @@ const printRound = (walls, units, round) => {
   }
   console.log(out);
 };
-
-export const solvePart2 = input => {};
